@@ -1,0 +1,360 @@
+#include <iostream>
+using namespace std;
+
+int displayMenu();
+int moveRight(int num, int robotArray[], int currentPosition, int moveCount[], int storePosition[]);
+int moveLeft(int num, int robotArray[], int currentPosition, int moveCount[], int storePosition[]);
+void display(int currentPosition);
+int reboot(int robotArray[], int currentPosition, int moveCount[], int storePosition[]);
+void showGrid(int robotArray[]);
+int cancel(int robotArray[], int currentPosition, int moveCount[], int storePosition[]);
+bool collison(int position_robot_1, int position_robot_2);
+char robotChoice();
+
+int main() {
+
+
+	int robotArray[10];
+	int storePosition_robot_1[30];
+	int moveCount_robot_1[1] = { 0 };
+	int currentPosition_robot_1 = 0;
+
+	int storePosition_robot_2[30];
+	int moveCount_robot_2[1] = { 0 };
+	int currentPosition_robot_2 = 1;
+
+
+	robotArray[currentPosition_robot_1] = 1;
+	robotArray[currentPosition_robot_2] = 2;
+
+	storePosition_robot_1[0] = 0;
+	storePosition_robot_2[0] = 1;
+
+	for (int i = 2; i < 10; i++) {
+		robotArray[i] = 0;
+	}
+
+	for (int i = 1; i < 30; i++) {
+		storePosition_robot_1[i] = -1;
+	}
+
+	for (int i = 1; i < 30; i++) {
+		storePosition_robot_2[i] = -1;
+	}
+
+	int choice = 0;
+	char robChoice;
+	do {
+		robChoice = robotChoice();
+
+		if (robChoice == 'A') {
+
+			do {
+				choice = displayMenu();
+
+				if (choice == 1) {
+					int num = 0;
+					int x = 0;
+					cout << "Enter number of cells to move right: ";
+					cin >> num;
+					x = currentPosition_robot_1 + num;
+					bool xyz = collison(x, currentPosition_robot_2);
+					if (xyz == false) {
+						currentPosition_robot_1 = moveRight(num, robotArray, currentPosition_robot_1, moveCount_robot_1, storePosition_robot_1);
+					}
+					
+				}
+				else if (choice == 2) {
+					int num = 0;
+					int x = 0;
+					cout << "Enter number of cells to move left: ";
+					cin >> num;
+					x = currentPosition_robot_1 - num;
+					bool xyz = collison(x, currentPosition_robot_2);
+					if (xyz == false) {
+						currentPosition_robot_1 = moveLeft(num,robotArray, currentPosition_robot_1, moveCount_robot_1, storePosition_robot_1);
+					}
+				}
+				else if (choice == 3) {
+					display(currentPosition_robot_1);
+				}
+				else if (choice == 4) {
+					currentPosition_robot_1 = reboot(robotArray, currentPosition_robot_1, moveCount_robot_1, storePosition_robot_1);
+				}
+				else if (choice == 5) {
+					showGrid(robotArray);
+				}
+				else if (choice == 6) {
+					currentPosition_robot_1 = cancel(robotArray, currentPosition_robot_1, moveCount_robot_1, storePosition_robot_1);
+				}
+
+
+			} while (choice != 7);
+		}
+		if (robChoice == 'B') {
+
+			do {
+				choice = displayMenu();
+				if (choice == 1) {
+					int num = 0;
+					int x = 0;
+					cout << "Enter number of cells to move right: ";
+					cin >> num;
+					x = currentPosition_robot_2 + num;
+					bool xyz = collison(currentPosition_robot_1,x);
+					if (xyz == false) {
+						currentPosition_robot_2 = moveRight(num, robotArray, currentPosition_robot_2, moveCount_robot_2, storePosition_robot_2);
+					}
+				
+				}
+				else if (choice == 2) {
+					int num = 0;
+					int x = 0;
+					cout << "Enter number of cells to move left: ";
+					cin >> num;
+					x = currentPosition_robot_2 - num;
+					bool xyz = collison(currentPosition_robot_1,x);
+					if (xyz == false) {
+						currentPosition_robot_2 = moveLeft(num, robotArray, currentPosition_robot_2, moveCount_robot_2, storePosition_robot_2);
+					}
+					
+				}
+				else if (choice == 3) {
+					display(currentPosition_robot_2);
+				}
+				else if (choice == 4) {
+					currentPosition_robot_2 = reboot(robotArray, currentPosition_robot_2, moveCount_robot_2, storePosition_robot_2);
+				}
+				else if (choice == 5) {
+					showGrid(robotArray);
+				}
+				else if (choice == 6) {
+					currentPosition_robot_2 = cancel(robotArray, currentPosition_robot_2, moveCount_robot_2, storePosition_robot_2);
+				}
+
+
+			} while (choice != 7);
+		}
+	} while (robChoice != 'C');
+
+	return 0;
+}
+
+
+char robotChoice() {
+
+	char robot_choice;
+	cout << "\nPress A: Robot 1\n";
+	cout << "Press B: Robot 2\n";
+	cout << "Press C: Exit\n";
+	cout << "Enter your choice: ";
+	cin >> robot_choice;
+
+	if (robot_choice == 'A' || robot_choice == 'B' || robot_choice == 'a' || robot_choice == 'b') {
+		if (robot_choice == 'A' || robot_choice == 'a') {
+			return 'A';
+		}
+		else {
+			return 'B';
+		}
+	}
+	else if (robot_choice == 'C' || robot_choice == 'c') {
+		return 'C';
+	}
+	else {
+		cout << "\nInvalid Input\n";
+	}
+	return robot_choice;
+
+}
+
+
+bool collison(int position_robot_1, int position_robot_2) {
+	if (position_robot_1 == position_robot_2) {
+		cout << "\nCollision detected. Try Again\n";
+		return true;
+	}
+	return false;
+}
+
+
+int displayMenu() {
+
+	int choice = 0;
+	cout << endl;
+	cout << "Press 1: Move Right" << endl;
+	cout << "Press 2: Move Left" << endl;
+	cout << "Press 3: Display" << endl;
+	cout << "Press 4: Reboot" << endl;
+	cout << "Press 5: Show Grid" << endl;
+	cout << "Press 6: Cancel" << endl;
+	cout << "Press 7: Exit" << endl;
+	cout << "Enter your choice: ";
+	cin >> choice;
+	if (choice == 1) {
+		return 1;
+	}
+	else if (choice == 2) {
+		return 2;
+	}
+	else if (choice == 3) {
+		return 3;
+	}
+	else if (choice == 4) {
+		return 4;
+	}
+	else if (choice == 5) {
+		return 5;
+	}
+	else if (choice == 6) {
+		return 6;
+	}
+	else if (choice == 7) {
+		return 7;
+	}
+	else {
+		cout << "\nInvalid input\n";
+	}
+
+	cout << endl;
+	return choice;
+}
+
+int moveRight(int num,int robotArray[], int currentPosition, int moveCount[], int storePosition[]) {
+
+	
+	int updatedPosition = currentPosition;
+	if (num < 0 || num>9 || (num + currentPosition) > 9) {
+		cout << "Invalid input\n";
+	}
+	else {
+		//robotArray[currentPosition] = 0;
+		updatedPosition = num + currentPosition;
+		if (robotArray[currentPosition] == 1) {
+			robotArray[updatedPosition] = 1;
+		}
+		else {
+			robotArray[updatedPosition] = 2;
+		}
+		robotArray[currentPosition] = 0;
+		//robotArray[updatedPosition] = 1;
+		moveCount[0] += 1;
+		storePosition[moveCount[0]] = updatedPosition;
+		return updatedPosition;
+	}
+	return updatedPosition;
+}
+
+
+
+int moveLeft(int num,int robotArray[], int currentPosition, int moveCount[], int storePosition[]) {
+
+	
+	int updatedPosition = currentPosition;
+	
+
+	if (num < 0 || num>9 || (currentPosition - num) < 0) {
+		cout << "Invalid input\n";
+	}
+	else {
+		
+		//robotArray[currentPosition] = 0;
+		updatedPosition = currentPosition - num;
+		if (robotArray[currentPosition] == 1) {
+			robotArray[updatedPosition] = 1;
+		}
+		else {
+			robotArray[updatedPosition] = 2;
+		}
+		robotArray[currentPosition] = 0;
+		//robotArray[updatedPosition] = 1;
+		moveCount[0] += 1;
+		storePosition[moveCount[0]] = updatedPosition;
+		return updatedPosition;
+	}
+	return updatedPosition;
+}
+
+
+
+void display(int currentPosition) {
+
+	cout << "\nRobot is currently at poistion: " << currentPosition << endl;
+}
+
+
+int reboot(int robotArray[], int currentPosition, int moveCount[], int storePosition[]) {
+
+	robotArray[currentPosition] = 0;
+	robotArray[0] = 1;
+	robotArray[1] = 2;
+	currentPosition = 0;
+	moveCount[0] = 0;
+
+	for (int i = 1; i < 30; i++) {
+		storePosition[i] = -1;
+	}
+	cout << "\nRobot rebooted\n";
+
+	return currentPosition;
+
+}
+
+void showGrid(int robotArray[]) {
+	cout << endl;
+	for (int i = 0; i < 10; i++) {
+		if (robotArray[i] == 1) {
+			cout << "[A]";
+		}
+		else if (robotArray[i] == 2) {
+			cout << "[B]";
+		}
+		else {
+			cout << "[ ]";
+		}
+	}
+	cout << endl;
+}
+
+
+int cancel(int robotArray[], int currentPosition, int moveCount[], int storePosition[]) {
+
+	int num = 0;
+	if (moveCount[0] == 0) {
+		cout << "\nNo operations to cancel" << endl;
+	}
+	else {
+		cout << "Enter number of operations to cancel :";
+		cin >> num;
+
+		if (num < 0 || num>9 || num > moveCount[0]) {
+			cout << "Invalid input\n";
+		}
+		else {
+			moveCount[0] -= num;
+			//robotArray[currentPosition] = 0;
+			int newIndex = storePosition[moveCount[0]];
+			if (robotArray[currentPosition] == 1) {
+				robotArray[newIndex] = 1;
+			}
+			else {
+				robotArray[newIndex] = 2;
+			}
+			robotArray[currentPosition] = 0;
+			currentPosition = newIndex;
+
+			for (int a = newIndex + 1; storePosition[a] != -1; a++) {
+				storePosition[a] = -1;
+			}
+			return currentPosition;
+		}
+	}
+	return currentPosition;
+}
+
+
+
+
+
+
+
